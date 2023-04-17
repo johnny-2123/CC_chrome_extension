@@ -53,12 +53,21 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         console.log(`!!!!!!!!!!!message from content received to popup.js`)
         console.log(request.result)
 
+        const offenseDateElement = document.querySelector('#infoTable th:nth-child(1)');
+        const caseNumberElement = document.querySelector('#infoTable th:nth-child(2)');
+        const chargeElement = document.querySelector('#infoTable th:nth-child(3)');
         const caseTypeElement = document.querySelector('#infoTable th:nth-child(1)');
+        const codeSectionElement = document.querySelector('#infoTable th:nth-child(3)');
         const dispositionElement = document.querySelector('#infoTable th:nth-child(2)');
+        const sentenceTimeElement = document.querySelector('#infoTable th:nth-child(2)');
 
         const [offenseDate, caseNumber, charge, caseType, codeSection, disposition, sentenceTime] = request.result.split('\t');
+        offenseDateElement.innerText = offenseDate
+        caseNumberElement.innerText = caseNumber
+        chargeElement.innerText = charge
         caseTypeElement.innerText = caseType;
+        codeSectionElement.innerText = codeSection
         dispositionElement.innerText = disposition;
-
+        sentenceTimeElement.innerText = sentenceTime;
     }
 })
