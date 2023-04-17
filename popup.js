@@ -27,7 +27,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
         navigator.clipboard.writeText(request.result);
 
-
         const offenseDateElement = document.querySelector('#infoTable td:nth-child(1)');
         const caseNumberElement = document.querySelector('#infoTable td:nth-child(2)');
         const chargeElement = document.querySelector('#infoTable td:nth-child(3)');
