@@ -1,19 +1,3 @@
-// // Add an event listener to the extractButton
-// document.addEventListener("DOMContentLoaded", async function () {
-//     document.getElementById("extractButton").addEventListener("click", async function () {
-
-//         const results = await new Promise((resolve, reject) => {
-//             chrome.runtime.sendMessage('get-page-data', (response) => {
-//                 resolve(response);
-//             });
-//         });
-
-//         console.log('received user data in popup.js', results);
-//         console.log(`event button clicked`);
-//     });
-// });
-
-
 
 async function getCurrentTab() {
     let queryOptions = { active: true, lastFocusedWindow: true };
@@ -23,18 +7,6 @@ async function getCurrentTab() {
 
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('extractButton').addEventListener('click', extractData);
-
-    const copyButton = document.querySelector('#copyButton');
-
-    copyButton.addEventListener('click', () => {
-        // Get the text content of the table
-        const infoTable = document.querySelector('#infoTable');
-        const tableText = infoTable.innerText;
-
-        // Copy the table text to the clipboard
-        navigator.clipboard.writeText(tableText);
-    });
-
 });
 
 async function extractData() {
@@ -53,13 +25,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         console.log(`!!!!!!!!!!!message from content received to popup.js`)
         console.log(request.result)
 
-        const offenseDateElement = document.querySelector('#infoTable th:nth-child(1)');
-        const caseNumberElement = document.querySelector('#infoTable th:nth-child(2)');
-        const chargeElement = document.querySelector('#infoTable th:nth-child(3)');
-        const caseTypeElement = document.querySelector('#infoTable th:nth-child(1)');
-        const codeSectionElement = document.querySelector('#infoTable th:nth-child(3)');
-        const dispositionElement = document.querySelector('#infoTable th:nth-child(2)');
-        const sentenceTimeElement = document.querySelector('#infoTable th:nth-child(2)');
+        navigator.clipboard.writeText(request.result);
+
+
+        const offenseDateElement = document.querySelector('#infoTable td:nth-child(1)');
+        const caseNumberElement = document.querySelector('#infoTable td:nth-child(2)');
+        const chargeElement = document.querySelector('#infoTable td:nth-child(3)');
+        const caseTypeElement = document.querySelector('#infoTable td:nth-child(4)');
+        const codeSectionElement = document.querySelector('#infoTable td:nth-child(5)');
+        const dispositionElement = document.querySelector('#infoTable td:nth-child(6)');
+        const sentenceTimeElement = document.querySelector('#infoTable td:nth-child(7)');
 
         const [offenseDate, caseNumber, charge, caseType, codeSection, disposition, sentenceTime] = request.result.split('\t');
         offenseDateElement.innerText = offenseDate
