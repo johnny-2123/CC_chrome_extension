@@ -1,3 +1,4 @@
+
 function getData() {
     // Define the regex patterns for each field
     const caseRegex = /Case #:\s*([^\n]+)/;
@@ -42,6 +43,6 @@ function getData() {
 }
 
 chrome.runtime.sendMessage({
-    "action": "sendDataToPopup.js",
+    "action": "vaSendDataToPopup.js",
     "result": getData()
 });

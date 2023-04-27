@@ -4,14 +4,12 @@ body {
     color: #333;
 }
 
-/* Header styles */
 h1 {
     text-align: center;
     margin: .2em 0;
 }
 
-/* Button styles */
-#extractButton {
+#mdExtractButton {
     display: block;
     margin: 1em auto;
     padding: 0.5em 1em;
@@ -24,18 +22,17 @@ h1 {
     transition: background-color 0.2s ease;
 }
 
-#extractButton:hover {
+#mdExtractButton:hover {
     background-color: #3E8E41;
 }
 
-/* Table styles */
-#infoTable {
+#mdInfoTable {
     border-collapse: collapse;
     width: 100%;
     margin-top: 2em;
 }
 
-#infoTable th {
+#mdInfoTable th {
     background-color: #4CAF50;
     color: white;
     font-weight: bold;
@@ -44,11 +41,11 @@ h1 {
     border: 1px solid #ddd;
 }
 
-#infoTable td {
+#mdInfoTable td {
     border: 1px solid #ddd;
     padding: 0.5em 1em;
 }
 
-#infoTable tr:nth-child(even) {
+#mdInfoTable tr:nth-child(even) {
     background-color: #f2f2f2;
 }

@@ -2,6 +2,7 @@
 async function getCurrentTab() {
     let queryOptions = { active: true, lastFocusedWindow: true };
     let [tab] = await chrome.tabs.query(queryOptions);
+    console.log(tab.url);
     return tab;
 }
 
@@ -11,18 +12,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function extractData() {
     const tab = await getCurrentTab();
-    const extractedData = await chrome.scripting.executeScript({
+    await chrome.scripting.executeScript({
         target: { tabId: tab.id },
-        files: ["content-script.js"]
+        files: ["va-content-script.js"]
     });
-    console.log(`message from content received to popup.js`)
-    console.log(extractedData);
+
 }
 
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    if (request.action == "sendDataToPopup.js") {
-        console.log(`!!!!!!!!!!!message from content received to popup.js`)
+    if (request.action == "vaSendDataToPopup.js") {
+        console.log(`!!!!!!!!!!!message from VAVAVAV content received to VAVAV popup.js`)
         console.log(request.result)
 
         navigator.clipboard.writeText(request.result);
