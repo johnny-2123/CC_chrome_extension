@@ -1,12 +1,18 @@
 {
-  "name": "CC extension",
-  "description": "Case Search Helper",
-  "version": "1.0",
+  "name": "Crim Search",
+  "description": "Crim Search Helper",
+  "version": "1.00",
   "manifest_version": 3,
   "action": {
     "default_popup": "va-case-search.html",
     "default_icon": "favicon-32x32.png",
     "default_title": "Click to show an alert"
+  },
+  "icons": {
+    "16": "favicon-16x16.png",
+    "32": "favicon-32x32.png",
+    "48": "favicon-48x48.png",
+    "128": "favicon-128x128.png"
   },
   "content_scripts": [
     {
@@ -29,15 +35,10 @@
   "background": {
     "service_worker": "background.js"
   },
-  "host_permissions": [
-    "http://*/*",
-    "https://*/*"
-  ],
   "permissions": [
-    "storage",
     "tabs",
     "activeTab",
     "scripting",
-    "webNavigation"
+    "storage"
   ]
 }

@@ -1,7 +1,11 @@
+html,
 body {
     font-family: Arial, sans-serif;
     font-size: 12px;
     color: #333;
+    max-height: 200px;
+    min-width: 688px;
+    overflow: scroll;
 }
 
 h1 {
@@ -9,27 +13,45 @@ h1 {
     margin: .2em 0;
 }
 
-#extractButton {
-    display: block;
-    margin: 1em auto;
+
+#extractButton,
+#resetButton {
+    color: whitesmoke;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     padding: 0.5em 1em;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 3px;
+    border-radius: 15px;
     font-size: 1.1em;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: none;
 }
 
-#extractButton:hover {
-    background-color: #3E8E41;
+#extractButton:hover,
+#resetButton:hover {
+    /* background-color: rgba(255, 255, 255, 0.5); */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1),
+        -2px -2px 5px rgba(255, 255, 255, 0.5),
+        2px 2px 5px rgba(0, 0, 0, 0.05);
 }
+
+#extractButton {
+    background-color: #4CAF50;
+}
+
+#resetButton {
+    margin-left: 10px;
+    background-color: rgba(255, 0, 0, 0.3);
+}
+
 
 #infoTable {
     border-collapse: collapse;
     width: 100%;
     margin-top: 2em;
+    margin-bottom: 2em;
 }
 
 #infoTable th {

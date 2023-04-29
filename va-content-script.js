@@ -37,9 +37,17 @@ function getData() {
     // Create a string that can be copied into separate Excel table columns
     const resultString = `${offenseDate}\t${caseNumber}\t${charge}\t${caseType}\t${codeSection}\t${disposition}\t${sentenceTime}`;
 
-    console.log(resultString)
+    const extractedDataObject = {
+        offenseDate: offenseDate,
+        caseNumber: caseNumber,
+        charge: charge,
+        caseType: caseType,
+        codeSection: codeSection,
+        disposition: disposition,
+        sentenceTime: sentenceTime
+    }
 
-    return resultString
+    return extractedDataObject
 }
 
 chrome.runtime.sendMessage({

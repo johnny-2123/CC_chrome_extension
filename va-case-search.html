@@ -9,28 +9,25 @@
 
 <body>
   <div class="vaCaseSearchDiv">
-    <h1>VA Case Search Helper</h1>
+    <h1>VA Crim Search</h1>
     <button id="extractButton">Extract Info</button>
-    <table id="infoTable">
-      <tr>
-        <th>Offense Date</th>
-        <th>Case #</th>
-        <th>Charge</th>
-        <th>Case Type</th>
-        <th>Code Section</th>
-        <th>Disposition</th>
-        <th>Sentence Time</th>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </table>
+    <button id="resetButton">Reset Data</button>
+    <h4 id="extensionMessage"></h4>
+    <div class="scrollableTable">
+      <table id="infoTable">
+        <thead>
+          <tr>
+            <th>Offense Date</th>
+            <th>Case #</th>
+            <th>Charge</th>
+            <th>Case Type</th>
+            <th>Code Section</th>
+            <th>Disposition</th>
+            <th>Sentence Time</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
   </div>
 </body>
 
