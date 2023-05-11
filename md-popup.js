@@ -1,7 +1,6 @@
 async function getCurrentTab() {
     let queryOptions = { active: true, lastFocusedWindow: true };
     let [tab] = await chrome.tabs.query(queryOptions);
-    console.log(tab.url);
     return tab;
 }
 
@@ -13,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function resetData() {
     chrome.storage.local.set({ 'mdInfoTableData': {} }, function () {
-        console.log('Data has been reset')
         document.getElementById("infoTable").innerHTML = "<tr><th>Offense Date</th><th>Case #</th><th>Charge</th><th>Case Type</th><th>Code Section</th><th>Disposition</th><th>Sentence Time</th></tr>";
     })
 }
@@ -78,21 +76,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         navigator.clipboard.writeText(resultString);
 
         chrome.storage.local.get("mdInfoTableData", function (result) {
-            console.log("Value currently is ", result);
-
             let updatedTableObj = result.mdInfoTableData || {};
-            console.log(`updatedTable Objecttttt`, updatedTableObj)
 
             if (!(caseNumber in updatedTableObj)) {
                 updatedTableObj[caseNumber] = request.result
-                console.log(`data didnt exist yettttt`)
                 chrome.storage.local.set({ "mdInfoTableData": updatedTableObj }, function () {
-                    console.log("Value is set to ", updatedTableObj);
+                    // console.log("Value is set to ", updatedTableObj);
                 });
             } else {
                 const extensionMessage = document.getElementById("extensionMessage");
                 extensionMessage.innerText = "Case number already in table";
-                console.log("Data already exists for case: ", caseNumber);
             }
         });
 
@@ -110,7 +103,7 @@ function populateMdTable() {
                 }
             }
             chrome.storage.local.set({ "mdInfoTableData": data.mdInfoTableData }, function () {
-                console.log("Updated mdInfoTableData object in chrome.storage.local");
+                // console.log("Updated mdInfoTableData object in chrome.storage.local");
             });
         }
     });

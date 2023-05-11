@@ -46,8 +46,6 @@ function getData() {
         sentenceTime: sentenceTime
     }
 
-    // console.log(resultString)
-
     return extractedDataObject
 }
 

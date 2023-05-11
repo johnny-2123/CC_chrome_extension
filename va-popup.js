@@ -2,7 +2,6 @@
 async function getCurrentTab() {
     let queryOptions = { active: true, lastFocusedWindow: true };
     let [tab] = await chrome.tabs.query(queryOptions);
-    console.log(tab.url);
     return tab;
 }
 
@@ -14,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function resetData() {
     chrome.storage.local.set({ 'vaInfoTableData': {} }, function () {
-        console.log('Data has been reset')
         document.getElementById("infoTable").innerHTML = "<tr><th>Offense Date</th><th>Case #</th><th>Charge</th><th>Case Type</th><th>Code Section</th><th>Disposition</th><th>Sentence Time</th></tr>";
     })
 }
@@ -79,19 +77,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         navigator.clipboard.writeText(resultString);
 
         chrome.storage.local.get("vaInfoTableData", function (result) {
-            console.log("Value currently is ", result);
-
             let updatedTableObj = result.vaInfoTableData || {};
-            console.log(`updatedTable Objecttttt`, updatedTableObj)
-
             if (!(caseNumber in updatedTableObj)) {
                 updatedTableObj[caseNumber] = request.result
-                console.log(`data didnt exist yettttt`)
                 chrome.storage.local.set({ "vaInfoTableData": updatedTableObj }, function () {
-                    console.log("Value is set to ", updatedTableObj);
+                    // console.log("Value is set to ", updatedTableObj);
                 });
             } else {
-                console.log("Data already exists for case number: ", caseNumber);
                 const extensionMessage = document.getElementById("extensionMessage");
                 extensionMessage.innerText = `Case number ${caseNumber} already in table`;
             }
@@ -111,7 +103,7 @@ function populateVaTable() {
                 }
             }
             chrome.storage.local.set({ "vaInfoTableData": data.vaInfoTableData }, function () {
-                console.log("Updated vaInfoTableData object in chrome.storage.local");
+                // console.log("Updated vaInfoTableData object in chrome.storage.local");
             });
         }
     });
