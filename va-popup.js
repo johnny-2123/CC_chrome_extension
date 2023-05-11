@@ -92,6 +92,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 });
             } else {
                 console.log("Data already exists for case number: ", caseNumber);
+                const extensionMessage = document.getElementById("extensionMessage");
+                extensionMessage.innerText = `Case number ${caseNumber} already in table`;
             }
         });
 

@@ -2,34 +2,34 @@
 <html>
 
 <head>
-    <title>MD Search Helper</title>
+    <title>MD Crim Search</title>
     <script src="./md-popup.js"></script>
     <link rel="stylesheet" type="text/css" href="./md-styles.css">
 </head>
 
 <body>
-    <h1>MD Crim Search</h1>
-    <button id="mdExtractButton">Extract Info</button>
-    <table id="mdInfoTable">
-        <tr>
-            <th>Offense Date</th>
-            <th>Case #</th>
-            <th>Charge</th>
-            <th>Case Type</th>
-            <th>Code Section</th>
-            <th>Disposition</th>
-            <th>Sentence Time</th>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
+    <div class="mdCaseSearchDiv">
+        <h1>MD Crim Search</h1>
+        <button id="extractButton">Extract Info</button>
+        <button id="resetButton">Reset Data</button>
+        <h4 id="extensionMessage"></h4>
+        <div class="scrollableTable">
+            <table id="infoTable">
+                <thead>
+                    <tr>
+                        <th>Offense Date</th>
+                        <th>Case #</th>
+                        <th>Charge</th>
+                        <th>Case Type</th>
+                        <th>Code Section</th>
+                        <th>Disposition</th>
+                        <th>Sentence Time</th>
+                    </tr>
+                </thead>
+                <tbody id="mdInfoTableBody"></tbody>
+            </table>
+        </div>
+    </div>
 </body>
 
 </html>

@@ -1,4 +1,3 @@
-
 async function getCurrentTab() {
     let queryOptions = { active: true, lastFocusedWindow: true };
     let [tab] = await chrome.tabs.query(queryOptions);
@@ -7,17 +6,29 @@ async function getCurrentTab() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById('mdExtractButton').addEventListener('click', extractData);
+    document.getElementById('extractButton').addEventListener('click', extractData);
+    document.getElementById('resetButton').addEventListener('click', resetData)
+
 });
 
+function resetData() {
+    chrome.storage.local.set({ 'mdInfoTableData': {} }, function () {
+        console.log('Data has been reset')
+        document.getElementById("infoTable").innerHTML = "<tr><th>Offense Date</th><th>Case #</th><th>Charge</th><th>Case Type</th><th>Code Section</th><th>Disposition</th><th>Sentence Time</th></tr>";
+    })
+}
+
 async function extractData() {
+
     const tab = await getCurrentTab();
     await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         files: ["md-content-script.js"]
     });
 
+    populateMdTable()
 }
+
 
 function addDataToTable(data) {
     // create a new row element
@@ -53,38 +64,55 @@ function addDataToTable(data) {
     newRow.appendChild(sentenceCell);
 
     // append the row to the table
-    var table = document.getElementById("mdInfoTable");
+    var table = document.getElementById("infoTable");
     table.appendChild(newRow);
 }
 
 
-
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.action == "mdSendDataToPopup.js") {
-
         const { offenseDate, caseNumber, charge, caseType, codeSection, disposition, sentenceTime } = request.result;
 
         const resultString = `${offenseDate}\t${caseNumber}\t${charge}\t${caseType}\t${codeSection}\t${disposition}\t${sentenceTime}`;
 
         navigator.clipboard.writeText(resultString);
 
-        // const offenseDateElement = document.querySelector('#mdInfoTable td:nth-child(1)');
-        // const caseNumberElement = document.querySelector('#mdInfoTable td:nth-child(2)');
-        // const chargeElement = document.querySelector('#mdInfoTable td:nth-child(3)');
-        // const caseTypeElement = document.querySelector('#mdInfoTable td:nth-child(4)');
-        // const codeSectionElement = document.querySelector('#mdInfoTable td:nth-child(5)');
-        // const dispositionElement = document.querySelector('#mdInfoTable td:nth-child(6)');
-        // const sentenceTimeElement = document.querySelector('#infoTable td:nth-child(7)');
+        chrome.storage.local.get("mdInfoTableData", function (result) {
+            console.log("Value currently is ", result);
 
+            let updatedTableObj = result.mdInfoTableData || {};
+            console.log(`updatedTable Objecttttt`, updatedTableObj)
 
-        // offenseDateElement.innerText = offenseDate
-        // caseNumberElement.innerText = caseNumber
-        // chargeElement.innerText = charge
-        // caseTypeElement.innerText = caseType;
-        // codeSectionElement.innerText = codeSection
-        // dispositionElement.innerText = disposition;
-        // sentenceTimeElement.innerText = sentenceTime;
+            if (!(caseNumber in updatedTableObj)) {
+                updatedTableObj[caseNumber] = request.result
+                console.log(`data didnt exist yettttt`)
+                chrome.storage.local.set({ "mdInfoTableData": updatedTableObj }, function () {
+                    console.log("Value is set to ", updatedTableObj);
+                });
+            } else {
+                const extensionMessage = document.getElementById("extensionMessage");
+                extensionMessage.innerText = "Case number already in table";
+                console.log("Data already exists for case: ", caseNumber);
+            }
+        });
 
-        addDataToTable(request.result)
     }
 })
+
+function populateMdTable() {
+
+    chrome.storage.local.get('mdInfoTableData', function (data) {
+        if (Object.keys(data.mdInfoTableData).length > 0) {
+            const table = document.getElementById("infoTable");
+            for (const [caseNumber, rowData] of Object.entries(data.mdInfoTableData)) {
+                if (!table.innerHTML.includes(caseNumber)) {
+                    addDataToTable(rowData);
+                }
+            }
+            chrome.storage.local.set({ "mdInfoTableData": data.mdInfoTableData }, function () {
+                console.log("Updated mdInfoTableData object in chrome.storage.local");
+            });
+        }
+    });
+
+}
