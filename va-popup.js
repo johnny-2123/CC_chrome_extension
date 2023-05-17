@@ -16,6 +16,9 @@ function resetData() {
     chrome.storage.local.set({ 'vaInfoTableData': {} }, function () {
         document.getElementById("infoTable").innerHTML = "<tr><th>Offense Date</th><th>Case #</th><th>Charge</th><th>Case Type</th><th>Code Section</th><th>Disposition</th><th>Sentence Time</th></tr>";
     })
+
+    const extensionMessage = document.getElementById("extensionMessage");
+    extensionMessage.innerText = `Data Reset`;
 }
 
 // call the content script to extract data from the current page
@@ -146,6 +149,8 @@ function copyTable() {
         });
     });
 
+    const extensionMessage = document.getElementById("extensionMessage");
+    extensionMessage.innerText = `Data copied to clipboard`;
 }
 
 // Listen for messages from the content-script
@@ -163,6 +168,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 updatedTableObj[caseNumber] = request.result
                 chrome.storage.local.set({ "vaInfoTableData": updatedTableObj }, function () {
                     // console.log("Value is set to ", updatedTableObj);
+                    const extensionMessage = document.getElementById("extensionMessage");
+                    extensionMessage.innerText = `Case number ${caseNumber} copied to table`;
                 });
             } else {
                 const extensionMessage = document.getElementById("extensionMessage");

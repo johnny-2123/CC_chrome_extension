@@ -5,7 +5,7 @@ function getData() {
     const offenseDateRegex = /Offense Date From:\s([\d/]+)/;
     const chargeRegex = /Charge Description:\s*([^\n]+)/;
     const codeSectionRegex = /Statute Code:\s*([^\n]+)/;
-    const dispositionRegex = /Disposition:\s*([^\n]+)/;
+    const dispositionRegex = /Disposition:\s*((?:(?!Disposition Date)[^\n])*)/;
     const sentenceTimeRegex = /Sentence Time:\s*([^\n]+)/;
 
     // Get the text content of the current page

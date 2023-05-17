@@ -33,7 +33,7 @@ h1 {
 
 #extractButton:hover,
 #resetButton:hover,
-#extractButton:hover {
+#copyButton:hover {
     /* background-color: rgba(255, 255, 255, 0.5); */
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1),
         -2px -2px 5px rgba(255, 255, 255, 0.5),
