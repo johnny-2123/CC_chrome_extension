@@ -8,8 +8,9 @@ async function getCurrentTab() {
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('extractButton').addEventListener('click', extractData);
     document.getElementById('resetButton').addEventListener('click', resetData)
-
+    document.getElementById('copyButton').addEventListener('click', copyTable)
 });
+
 
 function resetData() {
     chrome.storage.local.set({ 'vaInfoTableData': {} }, function () {
@@ -17,8 +18,8 @@ function resetData() {
     })
 }
 
+// call the content script to extract data from the current page
 async function extractData() {
-
     const tab = await getCurrentTab();
     await chrome.scripting.executeScript({
         target: { tabId: tab.id },
@@ -28,38 +29,81 @@ async function extractData() {
     populateVaTable()
 }
 
-
 function addDataToTable(data) {
-    // create a new row element
     var newRow = document.createElement("tr");
 
-    // create and append new data cells for each piece of extracted data
+    newRow.id = data.caseNumber;
+
+    // create and append new data cells with a user input field for each piece of extracted data from the content-script
     var dateCell = document.createElement("td");
-    dateCell.appendChild(document.createTextNode(data.offenseDate));
+    var dateInput = document.createElement("input");
+    dateInput.type = "text";
+    dateInput.value = data.offenseDate;
+    dateInput.classList.add("inputField");
+    dateInput.addEventListener('change', function () {
+        updateStorage(newRow.id, 'offenseDate', this.value);
+    });
+    dateCell.appendChild(dateInput);
     newRow.appendChild(dateCell);
 
+    // case number is not editable
     var caseCell = document.createElement("td");
     caseCell.appendChild(document.createTextNode(data.caseNumber));
     newRow.appendChild(caseCell);
 
     var chargeCell = document.createElement("td");
-    chargeCell.appendChild(document.createTextNode(data.charge));
+    var chargeInput = document.createElement("input");
+    chargeInput.type = "text";
+    chargeInput.value = data.charge;
+    chargeInput.classList.add("inputField");
+    chargeInput.addEventListener('change', function () {
+        updateStorage(newRow.id, 'charge', this.value);
+    });
+    chargeCell.appendChild(chargeInput);
     newRow.appendChild(chargeCell);
 
     var typeCell = document.createElement("td");
-    typeCell.appendChild(document.createTextNode(data.caseType));
+    var typeInput = document.createElement("input");
+    typeInput.type = "text";
+    typeInput.value = data.caseType;
+    typeInput.classList.add("inputField");
+    typeInput.addEventListener('change', function () {
+        updateStorage(newRow.id, 'caseType', this.value);
+    });
+    typeCell.appendChild(typeInput);
     newRow.appendChild(typeCell);
 
     var codeCell = document.createElement("td");
-    codeCell.appendChild(document.createTextNode(data.codeSection));
+    var codeInput = document.createElement("input");
+    codeInput.type = "text";
+    codeInput.value = data.codeSection;
+    codeInput.classList.add("inputField");
+    codeInput.addEventListener('change', function () {
+        updateStorage(newRow.id, 'codeSection', this.value);
+    });
+    codeCell.appendChild(codeInput);
     newRow.appendChild(codeCell);
 
     var dispCell = document.createElement("td");
-    dispCell.appendChild(document.createTextNode(data.disposition));
+    var dispInput = document.createElement("input");
+    dispInput.type = "text";
+    dispInput.value = data.disposition;
+    dispInput.classList.add("inputField");
+    dispInput.addEventListener('change', function () {
+        updateStorage(newRow.id, 'disposition', this.value);
+    });
+    dispCell.appendChild(dispInput);
     newRow.appendChild(dispCell);
 
     var sentenceCell = document.createElement("td");
-    sentenceCell.appendChild(document.createTextNode(data.sentenceTime));
+    var sentenceInput = document.createElement("input");
+    sentenceInput.type = "text";
+    sentenceInput.value = data.sentenceTime;
+    sentenceInput.classList.add("inputField");
+    sentenceInput.addEventListener('change', function () {
+        updateStorage(newRow.id, 'sentenceTime', this.value);
+    });
+    sentenceCell.appendChild(sentenceInput);
     newRow.appendChild(sentenceCell);
 
     // append the row to the table
@@ -67,14 +111,51 @@ function addDataToTable(data) {
     table.appendChild(newRow);
 }
 
+// Update the chrome.storage.local object with the new value for the given key
+function updateStorage(rowId, key, newValue) {
+    chrome.storage.local.get('vaInfoTableData', function (data) {
+        if (data.vaInfoTableData && data.vaInfoTableData[rowId]) {
+            data.vaInfoTableData[rowId][key] = newValue;
+            chrome.storage.local.set({ 'vaInfoTableData': data.vaInfoTableData }, function () {
+                console.log('Data updated successfully');
+            });
+        }
+    });
+}
 
+// Copy the table to the clipboard
+function copyTable() {
+    chrome.storage.local.get('vaInfoTableData', function (data) {
+        let tableData = data.vaInfoTableData;
+        let output = '';
+        const headerString = `Offense Date\tCase #\tCharge\tCase Type\tCode Section\tDisposition\tSentence Time`;
+        output += `${headerString}\n`;
+        // Iterate through all objects in the tableData object and create a string for each row
+        for (let key in tableData) {
+            let row = tableData[key];
+            console.log('row', row)
+            const { offenseDate, caseNumber, charge, caseType, codeSection, disposition, sentenceTime } = row;
+            const rowOutput = `${offenseDate}\t${caseNumber}\t${charge}\t${caseType}\t${codeSection}\t${disposition}\t${sentenceTime}`;
+            console.log(`result string`, rowOutput);
+            output += `${rowOutput}\n`;
+        }
+        navigator.clipboard.writeText(output).then(function () {
+            console.log('Table copied to clipboard.');
+        }, function () {
+            console.error('Unable to write to clipboard. Please try again');
+        });
+    });
+
+}
+
+// Listen for messages from the content-script
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.action == "vaSendDataToPopup.js") {
         const { offenseDate, caseNumber, charge, caseType, codeSection, disposition, sentenceTime } = request.result;
 
         const resultString = `${offenseDate}\t${caseNumber}\t${charge}\t${caseType}\t${codeSection}\t${disposition}\t${sentenceTime}`;
 
-        navigator.clipboard.writeText(resultString);
+        // navigator.clipboard.writeText(resultString);
 
         chrome.storage.local.get("vaInfoTableData", function (result) {
             let updatedTableObj = result.vaInfoTableData || {};
@@ -92,6 +173,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 })
 
+// Populate the table with data from chrome.storage.local
 function populateVaTable() {
 
     chrome.storage.local.get('vaInfoTableData', function (data) {

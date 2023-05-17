@@ -9,7 +9,6 @@ function getData() {
     const dispositionRegex = /Disposition:\s*([^\n]+)/;
     const sentenceTimeRegex = /Sentence Time:\s*([^\n]+)/;
 
-    // Get the text content of the current page
     const pageText = document.body.innerText;
 
     // Match each regex pattern against the page text and extract the captured group
