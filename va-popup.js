@@ -1,4 +1,3 @@
-
 async function getCurrentTab() {
     let queryOptions = { active: true, lastFocusedWindow: true };
     let [tab] = await chrome.tabs.query(queryOptions);
@@ -10,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('resetButton').addEventListener('click', resetData)
     document.getElementById('copyButton').addEventListener('click', copyTable)
 });
-
 
 function resetData() {
     chrome.storage.local.set({ 'vaInfoTableData': {} }, function () {
@@ -32,6 +30,7 @@ async function extractData() {
     populateVaTable()
 }
 
+// Add a new row to the chrome extension table with the extracted data
 function addDataToTable(data) {
     var newRow = document.createElement("tr");
 
@@ -131,14 +130,15 @@ function copyTable() {
     chrome.storage.local.get('vaInfoTableData', function (data) {
         let tableData = data.vaInfoTableData;
         let output = '';
-        const headerString = `Offense Date\tCase #\tCharge\tCase Type\tCode Section\tDisposition\tSentence Time`;
+        const headerString = `Date of Offense\tState/Federal Case Number\tOffense Name\tAbout Charge\tStatute\tDisposition\tSentence\tState/Department\tContact`;
+        const stateDepartment = 'VA';
         output += `${headerString}\n`;
         // Iterate through all objects in the tableData object and create a string for each row
         for (let key in tableData) {
             let row = tableData[key];
             console.log('row', row)
             const { offenseDate, caseNumber, charge, caseType, codeSection, disposition, sentenceTime } = row;
-            const rowOutput = `${offenseDate}\t${caseNumber}\t${charge}\t${caseType}\t${codeSection}\t${disposition}\t${sentenceTime}`;
+            const rowOutput = `${offenseDate}\t${caseNumber}\t${charge}\t${caseType}\t${codeSection}\t${disposition}\t${sentenceTime}\t${stateDepartment}`;
             console.log(`result string`, rowOutput);
             output += `${rowOutput}\n`;
         }
@@ -182,7 +182,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 // Populate the table with data from chrome.storage.local
 function populateVaTable() {
-
     chrome.storage.local.get('vaInfoTableData', function (data) {
         if (Object.keys(data.vaInfoTableData).length > 0) {
             const table = document.getElementById("infoTable");

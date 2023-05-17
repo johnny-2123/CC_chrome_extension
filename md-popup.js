@@ -19,6 +19,7 @@ function resetData() {
     extensionMessage.innerText = `Data Reset`;
 }
 
+// call the content script to extract data from the current page
 async function extractData() {
     const tab = await getCurrentTab();
     await chrome.scripting.executeScript({
@@ -28,6 +29,7 @@ async function extractData() {
     populateMdTable()
 }
 
+// Add a new row to the chrome extension table with the extracted data
 function addDataToTable(data) {
     var newRow = document.createElement("tr");
     newRow.id = data.caseNumber;
@@ -123,12 +125,13 @@ function copyTable() {
     chrome.storage.local.get('mdInfoTableData', function (data) {
         let tableData = data.mdInfoTableData;
         let output = '';
-        const headerString = `Offense Date\tCase #\tCharge\tCase Type\tCode Section\tDisposition\tSentence Time`;
+        const headerString = `Date of Offense\tState/Federal Case Number\tOffense Name\tAbout Charge\tStatute\tDisposition\tSentence\tState/Department\tContact`;
+        const stateDepartment = 'MD';
         output += `${headerString}\n`;
         for (let key in tableData) {
             let row = tableData[key];
             const { offenseDate, caseNumber, charge, caseType, codeSection, disposition, sentenceTime } = row;
-            const rowOutput = `${offenseDate}\t${caseNumber}\t${charge}\t${caseType}\t${codeSection}\t${disposition}\t${sentenceTime}`;
+            const rowOutput = `${offenseDate}\t${caseNumber}\t${charge}\t${caseType}\t${codeSection}\t${disposition}\t${sentenceTime}\t${stateDepartment}`;
             output += `${rowOutput}\n`;
         }
         navigator.clipboard.writeText(output).then(function () {
