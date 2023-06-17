@@ -17,4 +17,8 @@ Features:
 
 - Saves time and streamlines your workflow
 
+
+<img width="613" alt="image" src="https://github.com/johnny-2123/Crim-Search-Extension/assets/95261336/b42320b2-0405-4411-afc4-c496e7427ac4">
+
+
 We hope you find the Criminal Case Extractor to be a valuable addition to your workflow. Please feel free to contact us with any feedback or suggestions for future improvements.
